@@ -8,6 +8,8 @@
 > byte-verified), and a **stable patch-level audit** showing the device is missing 14 reachable
 > security fixes from 6.18.45 onward. Negative results are documented as carefully as positive ones.
 
+**快速入口**：[一页看完（SUMMARY）](docs/SUMMARY.md) · [英文版研究日志](docs/journal/EN-JOURNAL.md) · [补丁级别审计](docs/patch-level/PATCH_LEVEL_6.18.45_58.md) · [English README](README.en.md)
+
 ---
 
 ## 1. 这台机器
@@ -30,6 +32,18 @@
 目标很简单：**拿 root / 永久解锁**。官方通道走不通（服务端拒绝 `flashing unlock`），所以只能从技术侧来。
 
 整条链是这样（每一环都有实测或源码证据）：
+
+```mermaid
+flowchart LR
+    A["写 android_esp<br/>efisp · 8 MiB FAT12"] --> B["BL 从 efisp 加载 GBL<br/>只查 UEFI、不验签"]
+    B --> C["我们的 GBL 调<br/>gbl_efi_avb vtable +0x48"]
+    C --> D["WriteLockState(Self,<br/>DEVICE, UNLOCKED)"]
+    D --> E["永久解锁<br/>→ Magisk"]
+    A -. "唯一阻塞：块设备写" .-> F["SELinux：只有 update_engine 域<br/>有 android_esp blk_file write"]
+    F -. "唯一手段" .-> G["一次内核写<br/>清 selinux_state (_text+0x2959630)"]
+    G -. "尚未拿到" .-> A
+    style G fill:#fee,stroke:#c33
+```
 
 ```
 ① 写 android_esp（XRing 的 efisp，8 MiB FAT12，内含 EFI/BOOT/BOOTAA64.EFI 即 GBL）
@@ -87,6 +101,17 @@
 
 闭环是这样（全部可复跑）：
 
+```mermaid
+flowchart LR
+    A["38 份 ChangeLog<br/>6.18.23–58<br/>12,142 条 subject"] --> B["可达子系统<br/>+ 内存破坏形状"]
+    B --> C["164 条"]
+    C --> D["46 条 UAF/OOB/race"]
+    D --> E["21 条逐条核对"]
+    E --> F["已修 1 · 等效 1 · 代码不在 6"]
+    E --> G["未修 14<br/>← 缺口在这里"]
+    style G fill:#fee,stroke:#c33
+```
+
 ```
 本地 38 份 ChangeLog（6.18.23–6.18.58，12,142 条 subject）
   → 按"uid 2000 可达子系统 + 内存破坏形状"筛
@@ -139,7 +164,9 @@ patches/*.patch        上游修复补丁原文（GPL-2.0，来自 kernel.org，
 ## 8. 仓库结构
 
 ```
+docs/SUMMARY.md    一页看完：解锁链图 + 11 个面速查表 + 补丁级别漏斗 + 手上有什么
 docs/journal/      交接文档与阶段报告（HANDOVER、STATUS、UNLOCK_CHAIN、KASLR_SOLVED …）
+docs/journal/EN-JOURNAL.md   英文版研究日志（三轮完整叙事）
 docs/audits/       11 个面的审计报告（每个结论都带指令地址/符号偏移）
 docs/patch-level/  补丁级别审计、futex 候选与触发记录、模块流水线、单页状态
 tools/             可复跑的分析与打包工具

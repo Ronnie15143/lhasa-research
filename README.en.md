@@ -7,7 +7,21 @@ attacker = `adb shell` (uid 2000, no capabilities, SELinux enforcing).
 The device is interesting because its boot chain has a link that, once touched, means permanent
 unlock — and almost nothing about this SoC is public.
 
+**Quick links:** [one-page summary](docs/SUMMARY.md) · [English journal](docs/journal/EN-JOURNAL.md) · [patch-level audit](docs/patch-level/PATCH_LEVEL_6.18.45_58.md) · [中文 README](README.md)
+
 ## The chain we proved
+
+```mermaid
+flowchart LR
+    A["write android_esp<br/>efisp · 8 MiB FAT12"] --> B["BL loads GBL from efisp<br/>UEFI app? no signature check"]
+    B --> C["our GBL calls<br/>gbl_efi_avb vtable +0x48"]
+    C --> D["WriteLockState(Self,<br/>DEVICE, UNLOCKED)"]
+    D --> E["permanent unlock<br/>→ Magisk"]
+    A -. "only blocker: block write" .-> F["SELinux: only update_engine<br/>has android_esp blk_file write"]
+    F -. "only way" .-> G["one kernel write<br/>zero selinux_state (_text+0x2959630)"]
+    G -. "not obtained" .-> A
+    style G fill:#fee,stroke:#c33
+```
 
 ```
 ① write android_esp (XRing's efisp, 8 MiB FAT12, holds EFI/BOOT/BOOTAA64.EFI = GBL)
