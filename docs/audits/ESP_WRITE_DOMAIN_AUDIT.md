@@ -8,7 +8,7 @@
 
 ---
 
-## 0. 结论先行（TL;DR）
+## 0. 结论
 
 1. **全策略里能对 `android_esp_block_device` 做 `blk_file write` 的域，只有一个：`update_engine`。**
    没有第二个，也没有任何属性/`dev_type` 级别的批量授权兜底。
