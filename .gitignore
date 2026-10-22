@@ -1,0 +1,31 @@
+# build artefacts and data that must never be committed
+*.exe
+*.efi
+*.EFI
+*.img
+*.bin
+*.zip
+*.tar
+*.xz
+*.gz
+*.ko
+*.so
+*.o
+*.dex
+*.apk
+*.jar
+*.pcap
+*.sqlite
+*.log
+
+# local scratch
+__pycache__/
+*.pyc
+.venv/
+node_modules/
+
+# never publish anything that could identify a device or its owner
+*.kmsg
+*_dump.*
+*serial*
+*imei*
