@@ -277,7 +277,7 @@ memfd / shmem 路径      →  shmem_ashmem_ioctl       @ 0xffffffc08072fa08   (
 ## 9. 复现命令
 
 ```powershell
-$py = 'C:\Users\Ronnie\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\python\python.exe'
+$py = 'C:\Users\user\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\python\python.exe'
 $e  = 'runs\android\rom\vmlinux-4.0.21.0.elf'
 $i  = 'runs\android\rom\Image-4.0.21.0.bin'
 

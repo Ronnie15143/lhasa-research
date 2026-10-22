@@ -15,7 +15,7 @@
 | 系统 | Android 17 / HyperOS **OS4.0.21.0.XPNCNXM** |
 | 内核 | `6.18.21-android17-5-g284297031c53-abogki553682993-4k` |
 | SPL | 2026-08-01 |
-| adb serial | `038BB41049983540` |
+| adb serial | `<device-serial>` |
 | 当前状态 | BL **locked**（`ro.boot.flash.locked=1`、`vbmeta.device_state=locked`、AVB green） |
 | slot | `_a` 活动；`slot-unbootable:b = yes`；`android_esp_b` 可随意破坏 |
 | shell | uid 2000，Seccomp 0，groups 含 `uhid(3011)`、`readtracefs(3012)` |
@@ -23,7 +23,7 @@
 **工具链**
 
 - 交叉编译：`tools/zig/zig-windows-x86_64-0.13.0/zig.exe cc -target aarch64-linux-musl -static -O2 [-pthread] -o X.exe X.c`
-- 本机 Python：`C:\Users\Ronnie\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\python\python.exe`
+- 本机 Python：`C:\Users\user\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\python\python.exe`
   （已装 capstone / pyelftools / peewee / pyusb / libusb-package / brotli / lz4 / zstandard）
 - jadx：`tools\jadx\bin\jadx.bat`
 

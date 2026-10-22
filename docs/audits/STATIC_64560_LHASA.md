@@ -601,7 +601,7 @@ release_task @ 0xffffffc0802027d0  (0x538 = 1336 B)
 ## 8. 复核命令（任何人可重跑）
 
 ```powershell
-$py = 'C:\Users\Ronnie\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\python\python.exe'
+$py = 'C:\Users\user\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\python\python.exe'
 $elf = 'runs\android\rom\vmlinux-4.0.21.0.elf'
 $img = 'runs\android\rom\Image-4.0.21.0.bin'
 

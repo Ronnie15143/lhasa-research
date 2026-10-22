@@ -6,7 +6,7 @@
 
 ```
 继续小米 18 Fold（lhasa，XRing O3）的实机逆向任务。工作区
-C:\Users\Ronnie\Documents\deepseek-harness\default-workspace
+C:\Users\user\Documents\deepseek-harness\default-workspace
 
 【第一步，必须先做】
 读 runs/android/HANDOVER_2.md，全文。它比第一轮的 HANDOVER.md 新，且第 7 节列了
@@ -60,7 +60,7 @@ uhid 现在给了我们一个"全内容可控、持久、order-1、非特权"的
   - rom/btf_dump.py <image> <struct>                        ← 从 .BTF 取精确结构布局
   - fb3.py（需 FB_PID 环境变量；bootloader=0xd00d，fastbootd=0x4e11）
 · 交叉编译：tools/zig/zig-windows-x86_64-0.13.0/zig.exe cc -target aarch64-linux-musl -static -O2 [-pthread] -o X.exe X.c
-· 本机 python：C:\Users\Ronnie\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\python\python.exe
+· 本机 python：C:\Users\user\.dsh\dsh-runtimes\dsh-primary-runtime\dependencies\python\python.exe
 · 静态分析优先，实机操作前先想清楚风险；破坏性写入尽量先挑 android_esp_b
   （不活跃槽、已标记 unbootable）验证。
 

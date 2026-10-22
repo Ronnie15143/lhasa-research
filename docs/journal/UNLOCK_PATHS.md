@@ -2,7 +2,7 @@
 
 > 设备：Xiaomi 18 Fold `lhasa` / 2608BPX34C / XRing O3 / Android 17 / HyperOS OS4.0.21.0.XPNCNXM
 > 内核 `6.18.21-android17-5-...-4k`，SPL 2026-08-01，BL 锁定（`ro.boot.flash.locked=1`）
-> adb serial `038BB41049983540`，shell uid 2000
+> adb serial `<device-serial>`，shell uid 2000
 > 本轮时间窗：2026-10-22 09:00 – 09:45（**09:27 设备重启过一次，见 §8**）
 > 约束：只读探测 + 静态分析；未写任何分区、未 flash。
 
