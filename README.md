@@ -41,7 +41,7 @@ zig cc -target aarch64-uefi -O2 -o BOOTAA64_unlock.EFI payload/esp_unlock.c
 
 ## 补丁级别审计
 
-方法：取 38 份上游 ChangeLog（6.18.23–6.18.58，共 12,142 条提交主题），按"uid 2000 可达子系统 + 内存破坏形状"过滤至 46 条；逐条从 git.kernel.org 取修复 diff，提取汇编级指纹（新增比较指令、边界分支、字段偏移用法），在 `vmlinux-4.0.21.0.elf` 中逐一核对。
+方法：取 36 份上游 ChangeLog（6.18.23–6.18.58，共 12,142 条提交主题），按"uid 2000 可达子系统 + 内存破坏形状"过滤至 46 条；逐条从 git.kernel.org 取修复 diff，提取汇编级指纹（新增比较指令、边界分支、字段偏移用法），在 `vmlinux-4.0.21.0.elf` 中逐一核对。
 
 结果（21 条完整核对）：**未修 14 · 已修 1（等效实现）· 未编译 6**。校准锚点：6.18.39 的 binder `tmp_ref` pin 存在（`0x1c5b8c`、`0x1c5ba8 stadd`），6.18.44 的 hid-logitech-dj `report_count==14` 检查存在（`0xf7fb80 cmp w3,#0xe`），故有效级别夹逼为 6.18.44，且 6.18.45 起无越级单独回移。
 

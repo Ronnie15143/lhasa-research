@@ -101,7 +101,7 @@ The most productive phase came from inverting the approach: instead of hunting f
 device kernel against upstream stable fixes.
 
 ```
-38 ChangeLogs (6.18.23 … 6.18.58, 12,142 subjects)
+36 ChangeLogs (6.18.23 … 6.18.58, 12,142 subjects)
   → filter: uid-2000-reachable subsystem AND memory-corruption shape
   → resolve the commit sha → pull the unified diff from git.kernel.org
   → derive an assembly fingerprint (a cmp immediate, a new bounds branch, a field offset)

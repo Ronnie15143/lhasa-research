@@ -42,7 +42,7 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-    A["38 份 ChangeLog<br/>6.18.23–58<br/>12,142 条 subject"] --> B["可达子系统<br/>+ 内存破坏形状"]
+    A["36 份 ChangeLog<br/>6.18.23–58<br/>12,142 条 subject"] --> B["可达子系统<br/>+ 内存破坏形状"]
     B --> C["164 条"]
     C --> D["46 条 UAF/OOB/race"]
     D --> E["21 条逐条核对"]
