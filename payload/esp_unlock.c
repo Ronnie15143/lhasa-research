@@ -68,18 +68,24 @@ int EfiMain(void *image_handle, void *system_table)
     if (status != 0 || !iface)
         return 4;
 
-    u64 *vt = *(u64 **)iface;
-    if (!vt || !vt[9])
+    /* GblEfiAvbProtocol is a flat struct, not a vtable pointer:
+     *   +0x00 uint64_t revision
+     *   +0x08 .. +0x40 function pointers
+     *   +0x48 write_lock_state
+     * (gbl/libefi_types/include/uefi/protocols/gbl_efi_avb_protocol.h)
+     * Dereferencing iface as a vtable pointer reads `revision` and treats it
+     * as an address - that was a bug in the first version of this payload. */
+    efi_write_lock_state wls = (efi_write_lock_state)*(u64 *)((u8 *)iface + 0x48);
+    if (!wls)
         return 5;
 
-    efi_write_lock_state wls = (efi_write_lock_state)vt[9];
-
-    /* Unlock the DEVICE lock.  If the firmware refuses (EFI_ACCESS_DENIED when
-     * the device is not unlockable) we still try to flip CRITICAL off, which is
-     * harmless and tells us how far we got. */
+    /* Unlock the DEVICE lock.  A firmware that considers the device
+     * non-unlockable answers EFI_ACCESS_DENIED; then try the CRITICAL lock,
+     * which is type 1 (the first version of this payload passed 0 here and
+     * therefore simply asked for DEVICE again). */
     int r = wls(iface, LOCK_TYPE_DEVICE, LOCK_STATE_UNLOCKED);
     if (r != 0)
-        r = wls(iface, 0 /*CRITICAL*/, LOCK_STATE_UNLOCKED);
+        r = wls(iface, 1 /* LOCK_TYPE_CRITICAL */, LOCK_STATE_UNLOCKED);
 
     return r == 0 ? 0 : 6;
 }

@@ -62,6 +62,18 @@ Percpu baseline 26240 kB → now 26240 kB (delta 0)
 - 输家走的是 custom 路径的 `-EBUSY`，返回码不是竞态判据；
 - `alloc_percpu(unsigned int)` 只有 4 字节，percpu 分配器按页块给，`meminfo` 看不出来。
 
+> **更正（外部评审指出，已核实为真）：`l78` 这次实验整体无效。**
+> `kernel/futex/core.c` 的处理器是
+> ```c
+> case PR_FUTEX_HASH_SET_SLOTS:
+>     if (arg4) return -EINVAL;      /* arg4 必须为 0 */
+>     ret = futex_hash_allocate(arg3, flags);   /* flags = FH_CUSTOM = 1，内核自己填 */
+> ```
+> 而 `l78` 传的是 `prctl(78, 1, SLOTS, 1)`，即 `arg4 = 1` ⇒ **每次都在 `if (arg4)` 处返回 `EINVAL`，
+> 根本没有进入 `futex_hash_allocate()`**，所以既没有竞态、也不会有 percpu 泄漏。
+> 早先我从反汇编里把 `cbz x2` 误读成"要求 arg4 非 0"，寄存器映射搞反了（`x2` 对应的是 `arg4`）。
+> 结论：**这条候选目前没有任何有效阴性证据**，`l78` 需要按 `arg4 = 0` 重写后重跑。
+
 ## 5. 下一步（按可行性排序）
 
 ### 5.0 已跑过的触发（2026-10-22 20:00，全部无崩溃）
